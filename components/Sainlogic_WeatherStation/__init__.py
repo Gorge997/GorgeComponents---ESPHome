@@ -18,8 +18,4 @@ CONFIG_SCHEMA = cv.Schema({
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    
-    # Questa riga dice a ESPHome di aggiungere il file alla lista dei sorgenti
-    cg.add_library("", "") 
-    # Specifichiamo l'include relativo alla cartella del componente
     cg.add_global(cg.RawStatement('#include "Sainlogic_WeatherStation.h"'))
