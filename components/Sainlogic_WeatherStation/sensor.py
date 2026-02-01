@@ -6,10 +6,8 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT, STATE_CLASS_TOTAL_INCREASING,
     DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_HUMIDITY, DEVICE_CLASS_ILLUMINANCE
 )
-from . import SainlogicStation, sainlogic_ns
-
-# Definiamo una stringa per l'ID del componente padre
-CONF_SAINLOGIC_ID = "sainlogic_weather_station_id"
+# Importiamo la costante e la classe
+from . import SainlogicStation, sainlogic_ns, CONF_SAINLOGIC_WEATHER_STATION_ID
 
 TYPES = {
     "temperature":     sensor.sensor_schema(unit_of_measurement=UNIT_CELSIUS, device_class=DEVICE_CLASS_TEMPERATURE, state_class=STATE_CLASS_MEASUREMENT),
@@ -23,17 +21,17 @@ TYPES = {
     "uv_index":        sensor.sensor_schema(unit_of_measurement="index", icon="mdi:sun-wireless", accuracy_decimals=1),
 }
 
-# La correzione: usiamo cv.use_id(SainlogicStation) associato a una stringa
+# CORREZIONE: Usiamo la stringa costante come chiave
 CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(SainlogicStation): cv.use_id(SainlogicStation),
+    cv.GenerateID(CONF_SAINLOGIC_WEATHER_STATION_ID): cv.use_id(SainlogicStation),
 }).extend({cv.Optional(t): TYPES[t] for t in TYPES})
 
 async def to_code(config):
-    # Recupera il componente padre tramite il suo ID di classe
-    parent = await cg.get_variable(config[SainlogicStation])
+    # Recuperiamo l'hub tramite l'ID salvato nella stringa costante
+    parent = await cg.get_variable(config[CONF_SAINLOGIC_WEATHER_STATION_ID])
     
     for key in TYPES:
         if key in config:
             sens = await sensor.new_sensor(config[key])
-            # Il nome della funzione nel file .h deve essere set_NOME_sensor
+            # Esegue: parent->set_xxx_sensor(sens);
             cg.add(getattr(parent, f"set_{key}_sensor")(sens))
