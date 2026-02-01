@@ -3,7 +3,7 @@ import esphome.config_validation as cv
 from esphome.const import CONF_ID
 
 # Namespace C++ (deve corrispondere a quello che useresti in C++)
-sainlogic_ns = cg.esphome_ns.namespace('sainlogic_weather_station')
+sainlogic_ns = cg.esphome_ns.namespace('sainlogic_weatherstation')
 # Classe C++
 SainlogicStation = sainlogic_ns.class_('MeteoStation', cg.PollingComponent)
 
